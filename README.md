@@ -14,9 +14,9 @@ Implemente em Python 3 um _matcher_ de expressões regulares. Dada uma expressã
    
    Uma expressão regular pré-fixada é dada, por exemplo por `+(.(a, b), c)`, representando a ER `ab + c`.
    
-   O transformador deve immplementar o algoritmo definido no livro-texto.
+   O transformador deve implementar o algoritmo definido no livro-texto.
    
-   Represente a função de transição `delta` como um dicionário em Python 3 onde as chaves são strings representando os estados de origem e os valores são pares de string e conjunto de string representando, respectivamente um símbolo do alfabeto ou epsilon, e os estados alcançáveis (em 1 passo!) através daquele símbolo. 
+   Represente a função de transição `delta` como um dicionário em Python 3 onde as chaves são strings representando os estados de origem e os valores são pares de string e conjunto de string representando, respectivamente, um símbolo do alfabeto ou epsilon, e os estados alcançáveis através daquele símbolo. 
 
 1. Transformador de AFNe à autômatos finitos não-determinísitcos (AFN).  
 
@@ -24,7 +24,7 @@ Implemente em Python 3 um _matcher_ de expressões regulares. Dada uma expressã
    
 1. Transformador de AFN à AFD.  
 
-    A função `afntoAFD : AFN -> AFD` deve receber um AFN e produzir o AFD associado, utilizando a mesma representação para `delta` porém com a restrição de que os valores do dicionário que representa `delta` são pares de string e conjunto de string no qual a cardinalidade do conjunto da segunda projeção é 1. 
+    A função `afntoAFD : AFN -> AFD` deve receber um AFN e produzir o AFD associado. Utiliza a mesma representação para `delta` acima porém com a restrição de que os valores do dicionário, que representa `delta`, são pares com uma string como primeira projeção e conjunto de string como segunda. A cardinalidade do conjunto da segunda projeção é sempre 1. 
     
 1. Transformador de AFD para AFD mínimo.
 
@@ -32,16 +32,16 @@ Implemente em Python 3 um _matcher_ de expressões regulares. Dada uma expressã
    
 1. Simiulador de AFD.
 
-   Seja `A = (Sigma, Q, delta, q0, F)` um AFD.  A expressão boolean `A.delta*(q0, w) in A.F` é verdadeira quando `w` é aceita por `A` e falsa casa contrário. O predicado `A.accepted(w)` é verdadeiro quando `w` é aceita por `A`.
+   Seja `A = (Sigma, Q, delta, q0, F)` um AFD.  A expressão Booleana `A.delta*(q0, w) in A.F`, em Python 3, é verdadeira quando `w` é aceita por `A` e falsa casa contrário. O predicado `A.accepted(w)` é verdadeiro quando `w` é aceita por `A`.
    
 1. Um _matcher_ de ER.  
 
-   A expressão booleana `match(er, w)`, onde `er` é uma expressão booleana pré-fixada, como em 1., e `w` é uma string no alfabeto de `er` é verdadeira quando `w` "casa" com `er` e falsa caso contrário. O predicado `match: (er : ER) x (w : Sigma*) -> Bool` é definido como `afdToAFDmin(afnToAFD(afneToAFN(erToAFNe(er)))).accepted(w)`.
+   A expressão booleana `match(er, w)`, onde `er` é uma expressão Booleana pré-fixada, como em 1., e `w` é uma string no alfabeto de `er` é verdadeira quando `w` "casa" com `er` e falsa caso contrário. O predicado `match: (er : ER) x (w : Sigma*) -> Bool` é definido como `afdToAFDmin(afnToAFD(afneToAFN(erToAFNe(er)))).accepted(w)`.
   
 - Seu programa, `er.py`, deve ler uma ER prefixada da linha de comando ou várias a partir de um arquivo imprimindo "OK" ou "Not OK" dependendo dos parâmtros passados.
 ```shell  
 python3 er.py "+( 'a', 'b')" "a"
-python3 er.py "a" -f ex1.er
+python3 er.py -f ex1.er "a" 
 ```
 Quando um arquivo for passado por parâmetro, as expressões regulares contidas neste arquivo devem ser verificadas contra a palavra passada por parâmetro.
 Por exemplo, se o arquivo `ex1.er` contiver as expressões regulares
@@ -56,21 +56,21 @@ python3 er.py -f ex1.er "a"
 ```
 seu programa deve imprimir as saídas abaixo.
 ```
-match(+(a,b), a) == True
-match(.(a,b), a) == False
-match(*(+(a, b)), a) == True
+match(+(a,b), a) == OK
+match(.(a,b), a) == Not OK
+match(*(+(a, b)), a) == OK
 ```
   
 ## Testes
 
-Implemente os testes a seguir como predicados a serem executados pelo autograder, seguindo uma das formas de chamada ao seu programa descrita aacima.
+Implemente os testes a seguir como predicados a serem executados pelo autograder, seguindo uma das formas de chamada ao seu programa descrita acima.
 
-1. `match('a', 'a') == True`
-1. `match(+('a', 'b'), 'a') == True`
-2. `match(.('a', 'b'), 'ab') == True`
-3. `match(*(+(`a`, `b`), 'a') == True`
-4. `match(*(+(`a`, `b`), 'aaa') == True`
-5. `match(*(+(`a`, `b`), 'ab') == True`
-6. `match(*(+(`a`, `b`), 'aba') == True`
-7. `match(*(+(`a`, `b`), 'abababa') == True`
+1. `match('a', 'a') == OK`
+1. `match(+('a', 'b'), 'a') == OK`
+2. `match(.('a', 'b'), 'ab') == OK`
+3. `match(*(+(`a`, `b`), 'a') == OK`
+4. `match(*(+(`a`, `b`), 'aaa') == OK`
+5. `match(*(+(`a`, `b`), 'ab') == OK`
+6. `match(*(+(`a`, `b`), 'aba') == OK`
+7. `match(*(+(`a`, `b`), 'abababa') == OK`
 8. Outros exemplos de expressões regulares mais complexas.
